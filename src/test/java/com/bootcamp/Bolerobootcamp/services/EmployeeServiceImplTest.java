@@ -125,21 +125,6 @@ class EmployeeServiceImplTest {
     }
 
     @Test
-    void addEmployeeFailsDueToMissingNameInInput()
-    {
-        Department d1 = new Department();
-        d1.setId(1);
-        d1.setName("Organisation");
-
-        Employee e1 = new Employee();
-        e1.addDepartment(d1);
-        e1.setId(1);
-
-        Exception exception = assertThrows(RuntimeException.class, () -> employeeServiceImpl.addEmployee(e1));
-        assertEquals("Name cannot be empty", exception.getMessage());
-    }
-
-    @Test
     void updateEmployeeIsSuccesfulAndAddsTheMandatoryDepartments()
     {
         //existing employee
@@ -200,32 +185,6 @@ class EmployeeServiceImplTest {
         when(employeeRepository.findById(e1.getId())).thenReturn(Optional.empty());
         Exception exception = assertThrows(RuntimeException.class, () -> employeeServiceImpl.updateEmployee(e1));
         assertEquals("Invalid employee id", exception.getMessage());
-    }
-
-    @Test
-    void updateEmployeeFailsDueToInvalidEmployeeName()
-    {
-        //existing employee
-        Employee existingEmployee = new Employee();
-        existingEmployee.setName("Shantanu");
-        existingEmployee.setId(1);
-
-        //employee details to be updated - //we are trying to add department d2, and change name
-        Employee e1 = new Employee();
-        e1.setId(1);
-        Department d1 = new Department();
-        d1.setId(1);
-        d1.setName("Organisation");
-        d1.setMandatory(true);
-        Department d2 = new Department();
-        d2.setId(2);
-        d2.setName("HR");
-        d2.setMandatory(false);
-        e1.addDepartment(d2);
-
-        when(employeeRepository.findById(e1.getId())).thenReturn(Optional.of(existingEmployee));
-        Exception exception = assertThrows(RuntimeException.class, () -> employeeServiceImpl.updateEmployee(e1));
-        assertEquals("Name cannot be empty", exception.getMessage());
     }
 
     @Test

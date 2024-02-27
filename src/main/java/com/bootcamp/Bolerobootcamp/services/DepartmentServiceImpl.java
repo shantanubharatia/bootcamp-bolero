@@ -37,11 +37,6 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     public Department addDepartment(Department department)
     {
-        if(department.getName() == null)
-        {
-            throw new CustomException(HttpStatus.BAD_REQUEST, "Name cannot be empty");
-        }
-
         this.setEmployeesForDepartment(department);
 
         departmentRepository.save(department);
@@ -50,20 +45,12 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     public Department updateDepartment(Department department)
     {
-        Department existingDepartment = departmentRepository.findById(department.getId()).orElseThrow(() -> new RuntimeException("Invalid department id"));
+        Department existingDepartment = departmentRepository.findById(department.getId()).orElseThrow(() -> new CustomException(HttpStatus.BAD_REQUEST, "Invalid department id"));
 
         if(existingDepartment.isReadOnly())
         {
             throw new CustomException(HttpStatus.BAD_REQUEST, "Cannot update department as it is read only");
         }
-
-        if(department.getName() == null)
-        {
-            throw new CustomException(HttpStatus.BAD_REQUEST, "Name cannot be empty");
-        }
-
-        setEmployeesForDepartment(department);
-
         departmentRepository.save(department);
 
         return department;
@@ -71,7 +58,7 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     public void deleteDepartmentById(int id)
     {
-        Department existingDepartment = departmentRepository.findById(id).orElseThrow(() -> new RuntimeException("Invalid department id"));
+        Department existingDepartment = departmentRepository.findById(id).orElseThrow(() -> new CustomException(HttpStatus.BAD_REQUEST, "Invalid department id"));
 
         if(existingDepartment.isReadOnly())
         {

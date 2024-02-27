@@ -13,7 +13,7 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
-//@Validated
+@Validated
 public class Employee {
     @Id
     @Column
@@ -21,7 +21,7 @@ public class Employee {
     @SequenceGenerator(name = "SEQUENCE_EMPLOYEE", sequenceName = "SEQUENCE_EMPLOYEE", allocationSize = 1)
     private int id;
 
-//    @NotNull(message = "Name cannot be empty")
+    @NotNull(message = "Name cannot be empty")
     @Column()
     private String name;
 

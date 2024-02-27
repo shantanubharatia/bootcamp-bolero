@@ -3,7 +3,7 @@ package com.bootcamp.Bolerobootcamp.controllers;
 import com.bootcamp.Bolerobootcamp.exceptions.CustomException;
 import com.bootcamp.Bolerobootcamp.models.Employee;
 import com.bootcamp.Bolerobootcamp.services.EmployeeService;
-import org.springframework.http.HttpStatus;
+import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -27,16 +27,9 @@ public class EmployeeController {
     }
 
     @PostMapping()
-    public Employee addEmployee(@RequestBody Employee employee)
+    public Employee addEmployee(@Valid @RequestBody Employee employee)
     {
-        try
-        {
-            return employeeService.addEmployee(employee);
-        }
-        catch(CustomException ex)
-        {
-            throw new ResponseStatusException(ex.getStatusCode(), ex.getMessage());
-        }
+        return employeeService.addEmployee(employee);
     }
 
     @GetMapping("{id}")
@@ -46,31 +39,18 @@ public class EmployeeController {
     }
 
     @PutMapping()
-    public Employee updateEmployeeById(@RequestBody Employee employee)
+    public Employee updateEmployeeById(@Valid @RequestBody Employee employee)
     {
-        try
-        {
-            return employeeService.updateEmployee(employee);
-        }
-        catch(CustomException ex)
-        {
-            throw new ResponseStatusException(ex.getStatusCode(), ex.getMessage());
-        }
+        return employeeService.updateEmployee(employee);
     }
 
     @DeleteMapping("{id}")
     public int deleteEmployeeById(@PathVariable("id") int id)
     {
-        try
-        {
-            employeeService.deleteEmployeeById(id);
-            return id;
-        }
-        catch(CustomException ex)
-        {
-            throw new ResponseStatusException(ex.getStatusCode(), ex.getMessage());
-        }
+        employeeService.deleteEmployeeById(id);
+        return id;
     }
+
 }
 
 

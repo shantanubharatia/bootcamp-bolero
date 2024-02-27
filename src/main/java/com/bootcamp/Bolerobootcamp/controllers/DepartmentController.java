@@ -3,6 +3,7 @@ package com.bootcamp.Bolerobootcamp.controllers;
 import com.bootcamp.Bolerobootcamp.exceptions.CustomException;
 import com.bootcamp.Bolerobootcamp.models.Department;
 import com.bootcamp.Bolerobootcamp.services.DepartmentService;
+import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -26,16 +27,9 @@ public class DepartmentController {
     }
 
     @PostMapping()
-    public Department addDepartment(@RequestBody Department department)
+    public Department addDepartment(@Valid @RequestBody Department department)
     {
-        try
-        {
-            return departmentService.addDepartment(department);
-        }
-        catch(CustomException ex)
-        {
-            throw new ResponseStatusException(ex.getStatusCode(), ex.getMessage());
-        }
+        return departmentService.addDepartment(department);
     }
 
     @GetMapping("{id}")
@@ -45,30 +39,16 @@ public class DepartmentController {
     }
 
     @PutMapping()
-    public Department updateDepartmentById(@RequestBody Department department)
+    public Department updateDepartmentById(@Valid @RequestBody Department department)
     {
-        try
-        {
-            return departmentService.updateDepartment(department);
-        }
-        catch(CustomException ex)
-        {
-            throw new ResponseStatusException(ex.getStatusCode(), ex.getMessage());
-        }
+
+        return departmentService.updateDepartment(department);
     }
 
     @DeleteMapping("{id}")
     public int deleteDepartmentById(@PathVariable("id") int id)
     {
-        try
-        {
-            departmentService.deleteDepartmentById(id);
-            return id;
-        }
-        catch(CustomException ex)
-        {
-            throw new ResponseStatusException(ex.getStatusCode(), ex.getMessage());
-        }
-
+        departmentService.deleteDepartmentById(id);
+        return id;
     }
 }

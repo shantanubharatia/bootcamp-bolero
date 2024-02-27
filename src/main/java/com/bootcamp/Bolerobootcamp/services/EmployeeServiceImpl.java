@@ -35,11 +35,6 @@ public class EmployeeServiceImpl implements EmployeeService {
     }
 
     public Employee addEmployee(Employee employee) {
-        if(employee.getName() == null)
-        {
-            throw new CustomException(HttpStatus.BAD_REQUEST, "Name cannot be empty");
-        }
-
         validateDepartmentsForEmployee(employee);
         //add the default departments
         this.addMandatoryDepartmentsToEmployee(employee);
@@ -49,11 +44,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     public Employee updateEmployee(Employee employee)
     {
-        employeeRepository.findById(employee.getId()).orElseThrow(() -> new RuntimeException("Invalid employee id"));
-        if(employee.getName() == null)
-        {
-            throw new CustomException(HttpStatus.BAD_REQUEST, "Name cannot be empty");
-        }
+        employeeRepository.findById(employee.getId()).orElseThrow(() -> new CustomException(HttpStatus.BAD_REQUEST, "Invalid employee id"));
         validateDepartmentsForEmployee(employee);
         //add the default departments
         this.addMandatoryDepartmentsToEmployee(employee);
@@ -63,7 +54,7 @@ public class EmployeeServiceImpl implements EmployeeService {
 
     public void deleteEmployeeById(int id)
     {
-        employeeRepository.findById(id).orElseThrow(() -> new RuntimeException("Invalid employee id"));
+        employeeRepository.findById(id).orElseThrow(() -> new CustomException(HttpStatus.BAD_REQUEST, "Invalid employee id"));
         employeeRepository.deleteById(id);
     }
 
@@ -71,7 +62,7 @@ public class EmployeeServiceImpl implements EmployeeService {
     {
         for (Department department: inputEmployee.getDepartments())
         {
-            departmentRepository.findById(department.getId()).orElseThrow(() -> new RuntimeException("department with department id = "+department.getId()+" not found"));
+            departmentRepository.findById(department.getId()).orElseThrow(() -> new CustomException(HttpStatus.BAD_REQUEST, "department with department id = "+department.getId()+" not found"));
         }
     }
 

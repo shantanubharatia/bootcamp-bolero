@@ -124,18 +124,6 @@ class DepartmentServiceImplTest {
     }
 
     @Test
-    void addDepartmentFailsDueToMissingNameInInput()
-    {
-        Department d1 = new Department();
-        d1.setId(1);
-        Employee e1 = new Employee();
-        d1.addEmployee(e1);
-
-        Exception exception = assertThrows(RuntimeException.class, () -> departmentServiceImpl.addDepartment(d1));
-        assertEquals("Name cannot be empty", exception.getMessage());
-    }
-
-    @Test
     void updateDepartmentIsSuccessful() {
 
         //existing department
@@ -143,23 +131,11 @@ class DepartmentServiceImplTest {
         existingDepartment.setName("HR");
         existingDepartment.setId(1);
 
-        //department details to be updated - //we are trying to add to add two employees, and change name
+        //department details to be updated - we are trying change name
         Department d1 = new Department();
         d1.setName("HR_Updated");
-        d1.setId(1);
-        Employee e1 = new Employee();
-        e1.setId(1);
-        e1.setName("Employee-1");
-        Employee e2 = new Employee();
-        e2.setId(2);
-        e2.setName("Employee-2");
-
-        d1.addEmployee(e1);
-        d1.addEmployee(e2);
 
         when(departmentRepository.findById(d1.getId())).thenReturn(Optional.of(existingDepartment));
-        when(employeeRepository.findById(e1.getId())).thenReturn(Optional.of(e1));
-        when(employeeRepository.findById(e2.getId())).thenReturn(Optional.of(e2));
 
         Department updatedDepartment = departmentServiceImpl.updateDepartment(d1);
         //since we have mocked the save function, hence the added employee won't have the id populated automatically. Hence adding it
@@ -176,81 +152,15 @@ class DepartmentServiceImplTest {
         existingDepartment.setName("HR");
         existingDepartment.setId(1);
 
-        //department details to be updated - //we are trying to add to add two employees, and change name
+        //department details to be updated - //we are trying to change name
         Department d1 = new Department();
         d1.setName("HR_Updated");
         d1.setId(1);
-        Employee e1 = new Employee();
-        e1.setId(1);
-        e1.setName("Employee-1");
-        Employee e2 = new Employee();
-        e2.setId(2);
-        e2.setName("Employee-2");
-
-        d1.addEmployee(e1);
-        d1.addEmployee(e2);
 
         when(departmentRepository.findById(d1.getId())).thenReturn(Optional.empty());
 
         Exception exception = assertThrows(RuntimeException.class, () -> departmentServiceImpl.updateDepartment(d1));
         assertEquals("Invalid department id", exception.getMessage());
-    }
-
-    @Test
-    void updateDepartmentFailsDueToInvalidDepartmentName() {
-
-        //existing department
-        Department existingDepartment = new Department();
-        existingDepartment.setId(1);
-        existingDepartment.setName("HR");
-
-        //department details to be updated - //we are trying to add to add two employees, and change name
-        Department d1 = new Department();
-        d1.setId(1);
-        Employee e1 = new Employee();
-        e1.setId(1);
-        e1.setName("Employee-1");
-        Employee e2 = new Employee();
-        e2.setId(2);
-        e2.setName("Employee-2");
-
-        d1.addEmployee(e1);
-        d1.addEmployee(e2);
-
-        when(departmentRepository.findById(d1.getId())).thenReturn(Optional.of(existingDepartment));
-
-        Exception exception = assertThrows(RuntimeException.class, () -> departmentServiceImpl.updateDepartment(d1));
-        assertEquals("Name cannot be empty", exception.getMessage());
-    }
-
-    @Test
-    void updateDepartmentFailsDueToInvalidEmployeeId() {
-
-        //existing department
-        Department existingDepartment = new Department();
-        existingDepartment.setId(1);
-        existingDepartment.setName("HR");
-
-        //department details to be updated - //we are trying to add to add two employees, and change name
-        Department d1 = new Department();
-        d1.setName("HR_Updated");
-        d1.setId(1);
-        Employee e1 = new Employee();
-        e1.setId(1);
-        e1.setName("Employee-1");
-        Employee e2 = new Employee();
-        e2.setId(2);
-        e2.setName("Employee-2");
-
-        d1.addEmployee(e1);
-        d1.addEmployee(e2);
-
-        when(departmentRepository.findById(d1.getId())).thenReturn(Optional.of(existingDepartment));
-        when(employeeRepository.findById(e1.getId())).thenReturn(Optional.empty());
-        when(employeeRepository.findById(e2.getId())).thenReturn(Optional.of(e2));
-
-        Exception exception = assertThrows(RuntimeException.class, () -> departmentServiceImpl.updateDepartment(d1));
-        assertEquals("employee with employee id = "+e1.getId()+" not found", exception.getMessage());
     }
 
     @Test
