@@ -2,8 +2,10 @@ package com.bootcamp.Bolerobootcamp.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.validation.annotation.Validated;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -11,17 +13,19 @@ import java.util.Set;
 @Entity
 @Getter
 @Setter
+//@Validated
 public class Employee {
     @Id
     @Column
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "employee_sequence")
-    @SequenceGenerator(name = "employee_sequence", sequenceName = "employee_sequence", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQUENCE_EMPLOYEE")
+    @SequenceGenerator(name = "SEQUENCE_EMPLOYEE", sequenceName = "SEQUENCE_EMPLOYEE", allocationSize = 1)
     private int id;
 
-    @Column
+//    @NotNull(message = "Name cannot be empty")
+    @Column()
     private String name;
 
-    @ManyToMany(cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany()
     @JoinTable(
             name="map_employee_department",
             joinColumns = @JoinColumn(name = "id_employee"),

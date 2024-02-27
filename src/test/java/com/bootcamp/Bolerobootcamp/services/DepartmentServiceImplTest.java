@@ -2,8 +2,8 @@ package com.bootcamp.Bolerobootcamp.services;
 
 import com.bootcamp.Bolerobootcamp.models.Department;
 import com.bootcamp.Bolerobootcamp.models.Employee;
-import com.bootcamp.Bolerobootcamp.repositories.IDepartmentRepository;
-import com.bootcamp.Bolerobootcamp.repositories.IEmployeeRepository;
+import com.bootcamp.Bolerobootcamp.repositories.DepartmentRepository;
+import com.bootcamp.Bolerobootcamp.repositories.EmployeeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
@@ -18,14 +18,14 @@ import java.util.Set;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
-class DepartmentServiceTest {
+class DepartmentServiceImplTest {
 
     @InjectMocks
-    private DepartmentService departmentService;
+    private DepartmentServiceImpl departmentServiceImpl;
     @Mock
-    private IEmployeeRepository employeeRepository;
+    private EmployeeRepository employeeRepository;
     @Mock
-    private IDepartmentRepository departmentRepository;
+    private DepartmentRepository departmentRepository;
 
     @BeforeEach
     void setup()
@@ -50,7 +50,7 @@ class DepartmentServiceTest {
 
         when(departmentRepository.findAll()).thenReturn(expectedDepartmentList);
 
-        List<Department> actualDepartmentList = departmentService.getAllDepartments();
+        List<Department> actualDepartmentList = departmentServiceImpl.getAllDepartments();
 
         assertEquals(expectedDepartmentList.size(), actualDepartmentList.size());
         for(int i=0; i<expectedDepartmentList.size(); i++)
@@ -73,7 +73,7 @@ class DepartmentServiceTest {
 
         when(departmentRepository.findById(d1.getId())).thenReturn(Optional.of(d1));
 
-        Department actualDepartment = departmentService.getDepartmentById(d1.getId());
+        Department actualDepartment = departmentServiceImpl.getDepartmentById(d1.getId());
 
         validateDepartment(d1, actualDepartment);
     }
@@ -97,7 +97,7 @@ class DepartmentServiceTest {
         when(employeeRepository.findById(e1.getId())).thenReturn(Optional.of(e1));
         when(employeeRepository.findById(e2.getId())).thenReturn(Optional.of(e2));
 
-        Department addedDepartment = departmentService.addDepartment(d1);
+        Department addedDepartment = departmentServiceImpl.addDepartment(d1);
         //since we have mocked the save function, hence the added department won't have the id populated automatically. Hence adding it
         addedDepartment.setId(1);
 
@@ -119,7 +119,7 @@ class DepartmentServiceTest {
 
         when(employeeRepository.findById(e1.getId())).thenReturn(Optional.empty());
 
-        Exception exception = assertThrows(RuntimeException.class, () -> departmentService.addDepartment(d1));
+        Exception exception = assertThrows(RuntimeException.class, () -> departmentServiceImpl.addDepartment(d1));
         assertEquals("employee with employee id = "+e1.getId()+" not found", exception.getMessage());
     }
 
@@ -131,7 +131,7 @@ class DepartmentServiceTest {
         Employee e1 = new Employee();
         d1.addEmployee(e1);
 
-        Exception exception = assertThrows(RuntimeException.class, () -> departmentService.addDepartment(d1));
+        Exception exception = assertThrows(RuntimeException.class, () -> departmentServiceImpl.addDepartment(d1));
         assertEquals("Name cannot be empty", exception.getMessage());
     }
 
@@ -161,7 +161,7 @@ class DepartmentServiceTest {
         when(employeeRepository.findById(e1.getId())).thenReturn(Optional.of(e1));
         when(employeeRepository.findById(e2.getId())).thenReturn(Optional.of(e2));
 
-        Department updatedDepartment = departmentService.updateDepartment(d1.getId(), d1);
+        Department updatedDepartment = departmentServiceImpl.updateDepartment(d1);
         //since we have mocked the save function, hence the added employee won't have the id populated automatically. Hence adding it
         updatedDepartment.setId(1);
 
@@ -192,7 +192,7 @@ class DepartmentServiceTest {
 
         when(departmentRepository.findById(d1.getId())).thenReturn(Optional.empty());
 
-        Exception exception = assertThrows(RuntimeException.class, () ->departmentService.updateDepartment(d1.getId(), d1));
+        Exception exception = assertThrows(RuntimeException.class, () -> departmentServiceImpl.updateDepartment(d1));
         assertEquals("Invalid department id", exception.getMessage());
     }
 
@@ -219,7 +219,7 @@ class DepartmentServiceTest {
 
         when(departmentRepository.findById(d1.getId())).thenReturn(Optional.of(existingDepartment));
 
-        Exception exception = assertThrows(RuntimeException.class, () ->departmentService.updateDepartment(d1.getId(), d1));
+        Exception exception = assertThrows(RuntimeException.class, () -> departmentServiceImpl.updateDepartment(d1));
         assertEquals("Name cannot be empty", exception.getMessage());
     }
 
@@ -249,7 +249,7 @@ class DepartmentServiceTest {
         when(employeeRepository.findById(e1.getId())).thenReturn(Optional.empty());
         when(employeeRepository.findById(e2.getId())).thenReturn(Optional.of(e2));
 
-        Exception exception = assertThrows(RuntimeException.class, () ->departmentService.updateDepartment(d1.getId(), d1));
+        Exception exception = assertThrows(RuntimeException.class, () -> departmentServiceImpl.updateDepartment(d1));
         assertEquals("employee with employee id = "+e1.getId()+" not found", exception.getMessage());
     }
 
@@ -280,7 +280,7 @@ class DepartmentServiceTest {
         when(employeeRepository.findById(e1.getId())).thenReturn(Optional.of(e1));
         when(employeeRepository.findById(e2.getId())).thenReturn(Optional.of(e2));
 
-        Exception exception = assertThrows(RuntimeException.class, () ->departmentService.updateDepartment(d1.getId(), d1));
+        Exception exception = assertThrows(RuntimeException.class, () -> departmentServiceImpl.updateDepartment(d1));
         assertEquals("Cannot update department as it is read only", exception.getMessage());
     }
 
@@ -295,7 +295,7 @@ class DepartmentServiceTest {
 
         when(departmentRepository.findById(d1.getId())).thenReturn(Optional.of(d1));
 
-        departmentService.deleteDepartmentById(d1.getId());
+        departmentServiceImpl.deleteDepartmentById(d1.getId());
 
         //nothing to assert - no exceptions thrown means delete was successful
     }
@@ -309,7 +309,7 @@ class DepartmentServiceTest {
         d1.addEmployee(e1);
         e1.setId(1);
 
-        Exception ex = assertThrows(RuntimeException.class, () -> departmentService.deleteDepartmentById(d1.getId()));
+        Exception ex = assertThrows(RuntimeException.class, () -> departmentServiceImpl.deleteDepartmentById(d1.getId()));
         assertEquals("Invalid department id", ex.getMessage());
     }
 
@@ -325,7 +325,7 @@ class DepartmentServiceTest {
 
         when(departmentRepository.findById(d1.getId())).thenReturn(Optional.of(d1));
 
-        Exception ex = assertThrows(RuntimeException.class, () -> departmentService.deleteDepartmentById(d1.getId()));
+        Exception ex = assertThrows(RuntimeException.class, () -> departmentServiceImpl.deleteDepartmentById(d1.getId()));
         assertEquals("Cannot delete department as it is read only", ex.getMessage());
     }
 

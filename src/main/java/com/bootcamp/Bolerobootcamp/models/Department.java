@@ -14,8 +14,8 @@ import java.util.Set;
 public class Department {
     @Id
     @Column
-    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "department_sequence")
-    @SequenceGenerator(name = "department_sequence", sequenceName = "department_sequence", allocationSize = 1)
+    @GeneratedValue(strategy = GenerationType.SEQUENCE, generator = "SEQUENCE_DEPARTMENT")
+    @SequenceGenerator(name = "SEQUENCE_DEPARTMENT", sequenceName = "SEQUENCE_DEPARTMENT", allocationSize = 1)
     private int id;
 
     @Column
@@ -27,7 +27,7 @@ public class Department {
     @Column
     private boolean readOnly = false;
 
-    @ManyToMany(mappedBy = "departments", cascade = {CascadeType.PERSIST, CascadeType.MERGE})
+    @ManyToMany(mappedBy = "departments")
     @JsonIgnoreProperties(value = "departments")
     private Set<Employee> employees = new HashSet<>();
 

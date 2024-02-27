@@ -1,7 +1,8 @@
 package com.bootcamp.Bolerobootcamp.controllers;
 
+import com.bootcamp.Bolerobootcamp.exceptions.CustomException;
 import com.bootcamp.Bolerobootcamp.models.Employee;
-import com.bootcamp.Bolerobootcamp.services.IEmployeeService;
+import com.bootcamp.Bolerobootcamp.services.EmployeeService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -9,54 +10,55 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @RestController
+@RequestMapping("employees")
 public class EmployeeController {
 
-    IEmployeeService employeeService;
+    EmployeeService employeeService;
 
-    public EmployeeController(IEmployeeService employeeService)
+    public EmployeeController(EmployeeService employeeService)
     {
         this.employeeService = employeeService;
     }
 
-    @GetMapping("/employees")
+    @GetMapping()
     public List<Employee> getAllEmployees()
     {
         return employeeService.getAllEmployees();
     }
 
-    @PostMapping("/employees")
+    @PostMapping()
     public Employee addEmployee(@RequestBody Employee employee)
     {
         try
         {
             return employeeService.addEmployee(employee);
         }
-        catch(Exception ex)
+        catch(CustomException ex)
         {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+            throw new ResponseStatusException(ex.getStatusCode(), ex.getMessage());
         }
     }
 
-    @GetMapping("/employees/{id}")
+    @GetMapping("{id}")
     public Employee getEmployeeById(@PathVariable("id") int id)
     {
         return employeeService.getEmployeeById(id);
     }
 
-    @PutMapping("/employees/{id}")
-    public Employee updateEmployeeById(@PathVariable("id") int id, @RequestBody Employee employee)
+    @PutMapping()
+    public Employee updateEmployeeById(@RequestBody Employee employee)
     {
         try
         {
-            return employeeService.updateEmployee(id, employee);
+            return employeeService.updateEmployee(employee);
         }
-        catch(Exception ex)
+        catch(CustomException ex)
         {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+            throw new ResponseStatusException(ex.getStatusCode(), ex.getMessage());
         }
     }
 
-    @DeleteMapping("/employees/{id}")
+    @DeleteMapping("{id}")
     public int deleteEmployeeById(@PathVariable("id") int id)
     {
         try
@@ -64,9 +66,9 @@ public class EmployeeController {
             employeeService.deleteEmployeeById(id);
             return id;
         }
-        catch(Exception ex)
+        catch(CustomException ex)
         {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+            throw new ResponseStatusException(ex.getStatusCode(), ex.getMessage());
         }
     }
 }

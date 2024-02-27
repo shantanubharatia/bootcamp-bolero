@@ -1,7 +1,8 @@
 package com.bootcamp.Bolerobootcamp.controllers;
 
+import com.bootcamp.Bolerobootcamp.exceptions.CustomException;
 import com.bootcamp.Bolerobootcamp.models.Department;
-import com.bootcamp.Bolerobootcamp.services.IDepartmentService;
+import com.bootcamp.Bolerobootcamp.services.DepartmentService;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
@@ -9,53 +10,54 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @RestController
+@RequestMapping("departments")
 public class DepartmentController {
-    IDepartmentService departmentService;
+    DepartmentService departmentService;
 
-    public DepartmentController(IDepartmentService departmentService)
+    public DepartmentController(DepartmentService departmentService)
     {
         this.departmentService = departmentService;
     }
 
-    @GetMapping("/departments")
+    @GetMapping()
     public List<Department> getAllDepartments()
     {
         return departmentService.getAllDepartments();
     }
 
-    @PostMapping("/departments")
+    @PostMapping()
     public Department addDepartment(@RequestBody Department department)
     {
         try
         {
             return departmentService.addDepartment(department);
         }
-        catch(Exception ex)
+        catch(CustomException ex)
         {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+            throw new ResponseStatusException(ex.getStatusCode(), ex.getMessage());
         }
     }
 
-    @GetMapping("/departments/{id}")
+    @GetMapping("{id}")
     public Department getDepartmentsById(@PathVariable("id") int id)
     {
         return departmentService.getDepartmentById(id);
     }
 
-    @PutMapping("/departments/{id}")
-    public Department updateDepartmentById(@PathVariable("id") int id, @RequestBody Department department)
+    @PutMapping()
+    public Department updateDepartmentById(@RequestBody Department department)
     {
         try
         {
-            return departmentService.updateDepartment(id, department);
+            return departmentService.updateDepartment(department);
         }
-        catch(Exception ex)
+        catch(CustomException ex)
         {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+            throw new ResponseStatusException(ex.getStatusCode(), ex.getMessage());
         }
     }
 
-    @DeleteMapping("/departments/{id}")
+    @DeleteMapping("{id}")
     public int deleteDepartmentById(@PathVariable("id") int id)
     {
         try
@@ -63,9 +65,9 @@ public class DepartmentController {
             departmentService.deleteDepartmentById(id);
             return id;
         }
-        catch(Exception ex)
+        catch(CustomException ex)
         {
-            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, ex.getMessage());
+            throw new ResponseStatusException(ex.getStatusCode(), ex.getMessage());
         }
 
     }

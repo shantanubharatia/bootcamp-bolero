@@ -2,28 +2,27 @@ package com.bootcamp.Bolerobootcamp.services;
 
 import com.bootcamp.Bolerobootcamp.models.Department;
 import com.bootcamp.Bolerobootcamp.models.Employee;
-import com.bootcamp.Bolerobootcamp.repositories.IDepartmentRepository;
-import com.bootcamp.Bolerobootcamp.repositories.IEmployeeRepository;
+import com.bootcamp.Bolerobootcamp.repositories.DepartmentRepository;
+import com.bootcamp.Bolerobootcamp.repositories.EmployeeRepository;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
-import org.springframework.util.Assert;
 
 import java.util.*;
 
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.Mockito.when;
 
-class EmployeeServiceTest {
+class EmployeeServiceImplTest {
 
     @InjectMocks
-    private EmployeeService employeeService;
+    private EmployeeServiceImpl employeeServiceImpl;
     @Mock
-    private IEmployeeRepository employeeRepository;
+    private EmployeeRepository employeeRepository;
     @Mock
-    private IDepartmentRepository departmentRepository;
+    private DepartmentRepository departmentRepository;
 
     @BeforeEach
     void setup()
@@ -50,7 +49,7 @@ class EmployeeServiceTest {
 
         when(employeeRepository.findAll()).thenReturn(expectedEmployeeList);
 
-        List<Employee> actualEmployeeList = employeeService.getAllEmployees();
+        List<Employee> actualEmployeeList = employeeServiceImpl.getAllEmployees();
 
         assertEquals(expectedEmployeeList.size(), actualEmployeeList.size());
         for(int i=0; i<expectedEmployeeList.size(); i++)
@@ -72,7 +71,7 @@ class EmployeeServiceTest {
 
         when(employeeRepository.findById(e1.getId())).thenReturn(Optional.of(e1));
 
-        Employee actualEmployee = employeeService.getEmployeeById(e1.getId());
+        Employee actualEmployee = employeeServiceImpl.getEmployeeById(e1.getId());
 
         validateEmployee(e1, actualEmployee);
     }
@@ -97,7 +96,7 @@ class EmployeeServiceTest {
         when(departmentRepository.findById(d2.getId())).thenReturn(Optional.of(d2));
         when(departmentRepository.findByMandatory(true)).thenReturn(List.of(d1));
 
-        Employee addedEmployee = employeeService.addEmployee(e1);
+        Employee addedEmployee = employeeServiceImpl.addEmployee(e1);
         //since we have mocked the save function, hence the added employee won't have the id populated automatically. Hence adding it
         addedEmployee.setId(1);
 
@@ -121,7 +120,7 @@ class EmployeeServiceTest {
         when(departmentRepository.findById(d1.getId())).thenReturn(Optional.empty());
         when(departmentRepository.findByMandatory(true)).thenReturn(List.of(d1));
 
-        Exception exception = assertThrows(RuntimeException.class, () -> employeeService.addEmployee(e1));
+        Exception exception = assertThrows(RuntimeException.class, () -> employeeServiceImpl.addEmployee(e1));
         assertEquals("department with department id = "+d1.getId()+" not found", exception.getMessage());
     }
 
@@ -136,7 +135,7 @@ class EmployeeServiceTest {
         e1.addDepartment(d1);
         e1.setId(1);
 
-        Exception exception = assertThrows(RuntimeException.class, () -> employeeService.addEmployee(e1));
+        Exception exception = assertThrows(RuntimeException.class, () -> employeeServiceImpl.addEmployee(e1));
         assertEquals("Name cannot be empty", exception.getMessage());
     }
 
@@ -167,7 +166,7 @@ class EmployeeServiceTest {
         when(departmentRepository.findById(d2.getId())).thenReturn(Optional.of(d2));
         when(departmentRepository.findByMandatory(true)).thenReturn(List.of(d1));
 
-        Employee updatedEmployee = employeeService.updateEmployee(e1.getId(), e1);
+        Employee updatedEmployee = employeeServiceImpl.updateEmployee(e1);
         //since we have mocked the save function, hence the added employee won't have the id populated automatically. Hence adding it
         updatedEmployee.setId(1);
 
@@ -199,7 +198,7 @@ class EmployeeServiceTest {
         e1.addDepartment(d2);
 
         when(employeeRepository.findById(e1.getId())).thenReturn(Optional.empty());
-        Exception exception = assertThrows(RuntimeException.class, () ->employeeService.updateEmployee(e1.getId(), e1));
+        Exception exception = assertThrows(RuntimeException.class, () -> employeeServiceImpl.updateEmployee(e1));
         assertEquals("Invalid employee id", exception.getMessage());
     }
 
@@ -225,7 +224,7 @@ class EmployeeServiceTest {
         e1.addDepartment(d2);
 
         when(employeeRepository.findById(e1.getId())).thenReturn(Optional.of(existingEmployee));
-        Exception exception = assertThrows(RuntimeException.class, () ->employeeService.updateEmployee(e1.getId(), e1));
+        Exception exception = assertThrows(RuntimeException.class, () -> employeeServiceImpl.updateEmployee(e1));
         assertEquals("Name cannot be empty", exception.getMessage());
     }
 
@@ -255,7 +254,7 @@ class EmployeeServiceTest {
         when(departmentRepository.findById(d1.getId())).thenReturn(Optional.empty());
         when(departmentRepository.findByMandatory(true)).thenReturn(List.of(d1));
         when(employeeRepository.findById(e1.getId())).thenReturn(Optional.of(existingEmployee));
-        Exception exception = assertThrows(RuntimeException.class, () ->employeeService.updateEmployee(e1.getId(), e1));
+        Exception exception = assertThrows(RuntimeException.class, () -> employeeServiceImpl.updateEmployee(e1));
         assertEquals("department with department id = "+d2.getId()+" not found", exception.getMessage());
 
     }
@@ -272,7 +271,7 @@ class EmployeeServiceTest {
 
         when(employeeRepository.findById(e1.getId())).thenReturn(Optional.of(e1));
 
-        employeeService.deleteEmployeeById(e1.getId());
+        employeeServiceImpl.deleteEmployeeById(e1.getId());
 
         //nothing to assert - no exceptions thrown means delete was successful
     }
@@ -287,7 +286,7 @@ class EmployeeServiceTest {
         e1.addDepartment(d1);
         e1.setId(1);
 
-        Exception ex = assertThrows(RuntimeException.class, () -> employeeService.deleteEmployeeById(e1.getId()));
+        Exception ex = assertThrows(RuntimeException.class, () -> employeeServiceImpl.deleteEmployeeById(e1.getId()));
         assertEquals("Invalid employee id", ex.getMessage());
     }
 
