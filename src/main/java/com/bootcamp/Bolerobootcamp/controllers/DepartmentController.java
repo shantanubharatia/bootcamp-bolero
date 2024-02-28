@@ -41,7 +41,6 @@ public class DepartmentController {
     @PutMapping()
     public Department updateDepartmentById(@Valid @RequestBody Department department)
     {
-
         return departmentService.updateDepartment(department);
     }
 

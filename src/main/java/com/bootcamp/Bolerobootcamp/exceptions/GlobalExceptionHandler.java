@@ -9,7 +9,6 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(CustomException.class)
     public ResponseEntity<String> handleApplicationException(CustomException ex) {
-
         return ResponseEntity.status(ex.getStatusCode()).body(ex.getMessage());
     }
 }

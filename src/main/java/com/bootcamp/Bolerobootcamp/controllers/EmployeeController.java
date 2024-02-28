@@ -1,11 +1,10 @@
 package com.bootcamp.Bolerobootcamp.controllers;
 
-import com.bootcamp.Bolerobootcamp.exceptions.CustomException;
 import com.bootcamp.Bolerobootcamp.models.Employee;
 import com.bootcamp.Bolerobootcamp.services.EmployeeService;
 import jakarta.validation.Valid;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
+
 
 import java.util.List;
 

@@ -2,6 +2,7 @@ package com.bootcamp.Bolerobootcamp.models;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,7 +23,7 @@ public class Department {
     private int id;
 
     @Column
-    @NotNull(message = "Name cannot be empty")
+    @NotEmpty(message = "Name cannot be empty")
     private String name;
 
     @Column

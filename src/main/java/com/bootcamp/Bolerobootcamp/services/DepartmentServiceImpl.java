@@ -15,12 +15,10 @@ import java.util.List;
 @Service
 public class DepartmentServiceImpl implements DepartmentService {
     private final DepartmentRepository departmentRepository;
-    private final EmployeeRepository employeeRepository;
 
-    public DepartmentServiceImpl(DepartmentRepository departmentRepository, EmployeeRepository employeeRepository)
+    public DepartmentServiceImpl(DepartmentRepository departmentRepository)
     {
         this.departmentRepository = departmentRepository;
-        this.employeeRepository = employeeRepository;
     }
 
     public List<Department> getAllDepartments()
@@ -37,8 +35,6 @@ public class DepartmentServiceImpl implements DepartmentService {
 
     public Department addDepartment(Department department)
     {
-        this.setEmployeesForDepartment(department);
-
         departmentRepository.save(department);
         return department;
     }
@@ -71,14 +67,5 @@ public class DepartmentServiceImpl implements DepartmentService {
             e.getDepartments().remove(existingDepartment);
         }
         departmentRepository.deleteById(id);
-    }
-
-    private void setEmployeesForDepartment(Department inputDepartment)
-    {
-        for (Employee employee : inputDepartment.getEmployees())
-        {
-            Employee emp = employeeRepository.findById(employee.getId()).orElseThrow(() -> new RuntimeException("employee with employee id = "+employee.getId()+" not found"));
-            emp.addDepartment(inputDepartment); // since employee is the parent of the relationship, hence it has to add the departments
-        }
     }
 }

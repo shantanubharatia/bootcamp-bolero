@@ -84,43 +84,11 @@ class DepartmentServiceImplTest {
         d1.setName("department 1");
         d1.setId(1);
 
-        Employee e1 = new Employee();
-        e1.setId(1);
-        e1.setName("Shantanu");
-        d1.addEmployee(e1);
-
-        Employee e2 = new Employee();
-        e2.setId(2);
-        e2.setName("Bharatia");
-        d1.addEmployee(e2);
-
-        when(employeeRepository.findById(e1.getId())).thenReturn(Optional.of(e1));
-        when(employeeRepository.findById(e2.getId())).thenReturn(Optional.of(e2));
-
         Department addedDepartment = departmentServiceImpl.addDepartment(d1);
         //since we have mocked the save function, hence the added department won't have the id populated automatically. Hence adding it
         addedDepartment.setId(1);
 
         validateDepartment(d1, addedDepartment);
-    }
-
-    @Test
-    void addDepartmentFailsDueToInvalidEmployeeId()
-    {
-        Department d1 = new Department();
-        d1.setId(1);
-        d1.setName("Organisation");
-
-        Employee e1 = new Employee();
-        e1.setName("Shantanu");
-        e1.setId(1);
-
-        d1.addEmployee(e1);
-
-        when(employeeRepository.findById(e1.getId())).thenReturn(Optional.empty());
-
-        Exception exception = assertThrows(RuntimeException.class, () -> departmentServiceImpl.addDepartment(d1));
-        assertEquals("employee with employee id = "+e1.getId()+" not found", exception.getMessage());
     }
 
     @Test
@@ -172,23 +140,12 @@ class DepartmentServiceImplTest {
         existingDepartment.setName("HR");
         existingDepartment.setReadOnly(true);
 
-        //department details to be updated - //we are trying to add to add two employees, and change name
+        //trying to update department name
         Department d1 = new Department();
         d1.setName("HR_Updated");
         d1.setId(1);
-        Employee e1 = new Employee();
-        e1.setId(1);
-        e1.setName("Employee-1");
-        Employee e2 = new Employee();
-        e2.setId(2);
-        e2.setName("Employee-2");
-
-        d1.addEmployee(e1);
-        d1.addEmployee(e2);
 
         when(departmentRepository.findById(d1.getId())).thenReturn(Optional.of(existingDepartment));
-        when(employeeRepository.findById(e1.getId())).thenReturn(Optional.of(e1));
-        when(employeeRepository.findById(e2.getId())).thenReturn(Optional.of(e2));
 
         Exception exception = assertThrows(RuntimeException.class, () -> departmentServiceImpl.updateDepartment(d1));
         assertEquals("Cannot update department as it is read only", exception.getMessage());
@@ -196,12 +153,8 @@ class DepartmentServiceImplTest {
 
     @Test
     void deleteDepartmentById() {
-        Employee e1 = new Employee();
-        e1.setName("Shantanu");
         Department d1 = new Department();
         d1.setName("Organisation");
-        d1.addEmployee(e1);
-        e1.setId(1);
 
         when(departmentRepository.findById(d1.getId())).thenReturn(Optional.of(d1));
 
@@ -212,12 +165,8 @@ class DepartmentServiceImplTest {
 
     @Test
     void deleteDepartmentByIdFailsDueToInvalidDepartmentId() {
-        Employee e1 = new Employee();
-        e1.setName("Shantanu");
         Department d1 = new Department();
         d1.setName("Organisation");
-        d1.addEmployee(e1);
-        e1.setId(1);
 
         Exception ex = assertThrows(RuntimeException.class, () -> departmentServiceImpl.deleteDepartmentById(d1.getId()));
         assertEquals("Invalid department id", ex.getMessage());
@@ -225,12 +174,8 @@ class DepartmentServiceImplTest {
 
     @Test
     void deleteDepartmentByIdFailsDueForReadOnlyDepartment() {
-        Employee e1 = new Employee();
-        e1.setName("Shantanu");
         Department d1 = new Department();
         d1.setName("Organisation");
-        d1.addEmployee(e1);
-        e1.setId(1);
         d1.setReadOnly(true);
 
         when(departmentRepository.findById(d1.getId())).thenReturn(Optional.of(d1));
