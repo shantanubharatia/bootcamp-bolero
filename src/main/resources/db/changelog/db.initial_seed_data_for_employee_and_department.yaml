@@ -1,0 +1,38 @@
+databaseChangeLog:
+  - changeSet:
+      id: 3
+      author: Shantanu
+      changes:
+        - insert:
+            tableName: EMPLOYEE
+            columns:
+              - column:
+                  name: id
+                  valueSequenceNext: 'SEQUENCE_EMPLOYEE'
+              - column:
+                  name: name
+                  value: 'Shantanu'
+        - insert:
+            tableName: DEPARTMENT
+            columns:
+              - column:
+                  name: id
+                  valueSequenceNext: 'SEQUENCE_DEPARTMENT'
+              - column:
+                  name: name
+                  value: 'Organisation'
+              - column:
+                  name: read_only
+                  valueBoolean: 'true'
+              - column:
+                  name: mandatory
+                  valueBoolean: 'true'
+        - insert:
+            tableName: MAP_EMPLOYEE_DEPARTMENT
+            columns:
+              - column:
+                  name: id_employee
+                  valueComputed: "SELECT id FROM EMPLOYEE WHERE name = 'Shantanu'"
+              - column:
+                  name: id_department
+                  valueComputed: "SELECT id FROM DEPARTMENT WHERE name = 'Organisation'"

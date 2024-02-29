@@ -1,0 +1,5 @@
+databaseChangeLog:
+  - include:
+      file: classpath:/db/changelog/db.schema_for_employee_and_department.yaml
+  - include:
+      file: classpath:/db/changelog/db.initial_seed_data_for_employee_and_department.yaml

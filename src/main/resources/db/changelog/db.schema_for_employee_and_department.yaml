@@ -1,0 +1,64 @@
+databaseChangeLog:
+  - changeSet:
+      id:  1
+      author:  Shantanu
+      changes:
+        - createTable:
+            columns:
+              - column:
+                  name: id
+                  type: integer
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: mandatory
+                  type: boolean
+              - column:
+                  name: read_only
+                  type: boolean
+            tableName:  DEPARTMENT
+        - createTable:
+            columns:
+              - column:
+                  name: id
+                  type: integer
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: name
+                  type: varchar(255)
+                  constraints:
+                    nullable: false
+            tableName: EMPLOYEE
+        - createTable:
+            columns:
+              - column:
+                  name: id_employee
+                  type: integer
+                  constraints:
+                    primaryKey: true
+                    foreignKeyName: fk_employee
+                    references: EMPLOYEE(id)
+              - column:
+                  name: id_department
+                  type: integer
+                  constraints:
+                    primaryKey: true
+                    foreignKeyName: fk_department
+                    references: DEPARTMENT(id)
+            tableName: MAP_EMPLOYEE_DEPARTMENT
+        - createSequence:
+            minValue: 1
+            startValue: 1
+            incrementBy: 1
+            sequenceName: SEQUENCE_EMPLOYEE
+        - createSequence:
+            minValue: 1
+            startValue: 1
+            incrementBy: 1
+            sequenceName: SEQUENCE_DEPARTMENT
